@@ -128,19 +128,21 @@ public class WheelTime {
     }
     //endregion
 
+    //region 数据
     private int[] mRangeStart = new int[]{1990, 1, 1, 0, 0, 0};
     private int[] mRangeEnd = new int[]{2100, 12, 31, 23, 59, 59};
     private int[] mSelected = new int[]{1990, 1, 1, 0, 0, 0};
 
-    private int mStartYear = 1990;
-    private int mStartMonth = 1;
-    private int mStartDay = 1;
+    //private int mStartYear = 1990;
+    //private int mStartMonth = 1;
+    //private int mStartDay = 1;
+    //
+    //private int mEndYear = 2100;
+    //private int mEndMonth = 12;
+    //private int mEndDay = 31; //表示31天的
 
-    private int mEndYear = 2100;
-    private int mEndMonth = 12;
-    private int mEndDay = 31; //表示31天的
-
-    private int mCurrentYear;
+    //private int mCurrentYear;
+    //endregion
 
     public void setSelected(Calendar calendar) {
         int year = calendar.get(Calendar.YEAR);
