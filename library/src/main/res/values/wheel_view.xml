@@ -1,12 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="DateWheelView">
-        <attr name="android:fontFamily"/>
-        <attr name="min" format="integer"/>
-        <attr name="max" format="integer"/>
-        <attr name="lineSpacingExtra" format="float"/>
-        <attr name="android:value"/>
-        <attr name="android:textSize"/>
-        <attr name="android:textStyle"/>
+        <attr name="android:label" />
+        <attr name="android:fontFamily" />
+        <attr name="android:value" />
+        <attr name="android:textSize" />
+        <attr name="android:textStyle" />
+        <attr name="alpha_gradient" format="boolean"/>
+        <attr name="item_visible_count" format="integer"/>
+        <attr name="text_x_offset" format="integer"/>
+        <attr name="divider_color" format="color"/>
+        <attr name="divider_width" format="dimension"/>
+        <attr name="divider_type" format="enum">
+            <enum name="fill" value="0"/>
+            <enum name="wrap" value="1"/>
+            <enum name="circle" value="2"/>
+        </attr>
+        <attr name="android:gravity"/>
+        <attr name="min" format="integer" />
+        <attr name="max" format="integer" />
+        <attr name="is_center_label" format="boolean" />
+        <attr name="line_spacing_multiplier" format="float" />
+
     </declare-styleable>
 </resources>
