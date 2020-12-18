@@ -3,10 +3,15 @@ package me.foolishchow.android.datepicker;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.contrarywind.listener.OnItemSelectedListener;
 
@@ -26,7 +31,13 @@ public class DateWheelView extends com.contrarywind.view.WheelView {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DateWheelView, 0, 0);
             int mFontFamily = a.getResourceId(R.styleable.DateWheelView_android_fontFamily, -1);
 
+            String label = a.getString(R.styleable.DateWheelView_android_label);
+            boolean centerLabel = a.getBoolean(R.styleable.DateWheelView_isCenterLabel,true);
+
+            int dividerColor = a.getColor(R.styleable.DateWheelView_dividerColor,
+                    Color.TRANSPARENT);
             float lineSpaceExtra = a.getFloat(R.styleable.DateWheelView_lineSpacingExtra,1.6F);
+            int visibleItemCount = a.getInt(R.styleable.DateWheelView_visibleItemCount,9);
 
             float textSize = a.getDimension(R.styleable.DateWheelView_android_textSize,sp2px(20));
             final int min = a.getInt(R.styleable.DateWheelView_min, 0);
@@ -34,6 +45,20 @@ public class DateWheelView extends com.contrarywind.view.WheelView {
             final int value = a.getInt(R.styleable.DateWheelView_android_value, min);
             a.recycle();//回收内存
 
+            isCenterLabel(centerLabel);
+            if(mFontFamily != -1){
+                try {
+                    Typeface font = ResourcesCompat.getFont(context, mFontFamily);
+                    setTypeface(font);
+                }catch (Resources.NotFoundException e){
+
+                }
+            }
+            if(!TextUtils.isEmpty(label)){
+                setLabel(label);
+            }
+            setItemsVisibleCount(visibleItemCount);
+            setDividerColor(dividerColor);
             setLineSpacingMultiplier(lineSpaceExtra);
             setTextSize(px2sp(textSize));
             setAdapter(new NumericWheelAdapter(min, max));// 设置"年"的显示数据

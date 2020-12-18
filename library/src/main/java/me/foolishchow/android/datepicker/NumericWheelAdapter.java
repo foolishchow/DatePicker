@@ -1,5 +1,7 @@
 package me.foolishchow.android.datepicker;
 
+import androidx.annotation.IntDef;
+
 import com.contrarywind.adapter.WheelAdapter;
 
 /**
@@ -7,7 +9,7 @@ import com.contrarywind.adapter.WheelAdapter;
  * Author: foolishchow
  * Date: 18/12/2020 4:30 PM
  */
-public class NumericWheelAdapter implements WheelAdapter {
+public class NumericWheelAdapter implements WheelAdapter<Integer> {
 
     private int minValue;
     private int maxValue;
@@ -23,7 +25,7 @@ public class NumericWheelAdapter implements WheelAdapter {
     }
 
     @Override
-    public Object getItem(int index) {
+    public Integer getItem(int index) {
         if (index >= 0 && index < getItemsCount()) {
             int value = minValue + index;
             return value;
@@ -32,17 +34,18 @@ public class NumericWheelAdapter implements WheelAdapter {
     }
 
     @Override
+    public int indexOf(Integer o) {
+        try {
+            return (int) o - minValue;
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    @Override
     public int getItemsCount() {
         return maxValue - minValue + 1;
     }
 
-    @Override
-    public int indexOf(Object o){
-        try {
-            return (int)o - minValue;
-        } catch (Exception e) {
-            return -1;
-        }
 
-    }
 }

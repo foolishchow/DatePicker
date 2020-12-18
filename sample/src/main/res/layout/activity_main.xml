@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,8 +8,11 @@
 
 
     <LinearLayout
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
 
@@ -17,30 +20,43 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="20sp"
+            android:label="年"
+            android:textSize="24sp"
             android:value="2000"
-            app:lineSpacingExtra="2"
+            app:isCenterLabel="false"
+            app:lineSpacingExtra="1.6"
+            android:fontFamily="@font/roboto_medium"
             app:max="2010"
-            app:min="1990" />
+            app:min="1990"
+            app:visibleItemCount="7" />
 
         <me.foolishchow.android.datepicker.DateWheelView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="20sp"
+            android:label="月"
+            app:isCenterLabel="false"
+            android:textSize="24sp"
             android:value="2000"
-            app:lineSpacingExtra="2"
+            app:lineSpacingExtra="1.6"
+            android:fontFamily="@font/roboto_medium"
             app:max="12"
-            app:min="1" />
+            app:min="1"
+            app:visibleItemCount="7" />
 
         <me.foolishchow.android.datepicker.DateWheelView
+
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="20sp"
+            android:label="日"
+            app:isCenterLabel="false"
+            android:fontFamily="@font/roboto_medium"
+            android:textSize="24sp"
             android:value="2000"
-            app:lineSpacingExtra="2"
+            app:lineSpacingExtra="1.6"
             app:max="31"
-            app:min="1" />
+            app:min="1"
+            app:visibleItemCount="7" />
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>
