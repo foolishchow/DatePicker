@@ -26,6 +26,13 @@ import me.foolishchow.android.datepicker.adapters.DateWheelAdapter;
  * 3. 时间range校验流程修改
  */
 public class WheelTime {
+    // 添加大小月月份并将其转换为list,方便之后的判断
+    //String[] months_big = {"1", "3", "5", "7", "8", "10", "12"};
+    //String[] months_little = {"4", "6", "9", "11"};
+    private static final List<String> FULL_MONTH_LIST = Arrays.asList("1", "3", "5", "7", "8", "10", "12");
+    private static final List<String> LESS_MONTH_List = Arrays.asList("4", "6", "9", "11");
+
+
     //region 控件
     @Nullable
     private WheelView mYearWheel;
@@ -39,13 +46,6 @@ public class WheelTime {
     private WheelView mMinuteWheel;
     @Nullable
     private WheelView mSecondWheel;
-
-    // 添加大小月月份并将其转换为list,方便之后的判断
-    //String[] months_big = {"1", "3", "5", "7", "8", "10", "12"};
-    //String[] months_little = {"4", "6", "9", "11"};
-    private static final List<String> FULL_MONTH_LIST = Arrays.asList("1", "3", "5", "7", "8", "10", "12");
-    private static final List<String> LESS_MONTH_List = Arrays.asList("4", "6", "9", "11");
-
     public void setWheels(
             @Nullable DateWheelView year, @Nullable DateWheelView month, @Nullable DateWheelView day,
             @Nullable DateWheelView hour, @Nullable DateWheelView minute, @Nullable DateWheelView second
