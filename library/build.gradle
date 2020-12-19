@@ -30,5 +30,19 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     api "com.contrarywind:wheelview:4.1.0"
-    api "com.contrarywind:Android-PickerView:4.1.9"
+//    api "com.contrarywind:Android-PickerView:4.1.9"
+}
+
+
+apply plugin: 'bintray-release'
+//添加
+publish {
+    repoName = "android"
+    artifactId = 'DatePicker'
+    userOrg = 'foolishchow'
+    groupId = 'me.foolishchow.android'
+    //uploadName = rootProject.uploadName
+    publishVersion = "0.0.1"//rootProject.publishVersion
+    desc = "android simple date picker base on Android-PickerView"
+    website = 'https://github.com/foolishchow/DatePicker.git'
 }

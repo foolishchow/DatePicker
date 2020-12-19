@@ -166,7 +166,7 @@ public class DateTimeValidator {
         if (mValidatedListener != null) {
             try {
                 mValidatedListener.onDateTimeValidated(list[0], list[1], list[2], list[3], list[4], list[5]);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
 
             }
         }
@@ -182,7 +182,7 @@ public class DateTimeValidator {
         return 31;
     }
 
-    private static final List<Integer> FULL_MONTH_LIST = Arrays.asList(1, 3, 5, 7, 8, 10, 12);
+    //private static final List<Integer> FULL_MONTH_LIST = Arrays.asList(1, 3, 5, 7, 8, 10, 12);
     private static final List<Integer> LESS_MONTH_List = Arrays.asList(4, 6, 9, 11);
 
     //region validate listener

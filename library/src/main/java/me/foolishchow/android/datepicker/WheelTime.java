@@ -1,13 +1,11 @@
 package me.foolishchow.android.datepicker;
 
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.bigkoo.pickerview.listener.ISelectTimeCallback;
 import com.contrarywind.listener.OnItemSelectedListener;
 import com.contrarywind.view.WheelView;
 
@@ -280,9 +278,9 @@ public class WheelTime implements DateTimeValidator.ValidatedListener {
     }
 
     //region callback
-    private ISelectTimeCallback mSelectChangeCallback;
+    private OnDateTimeSelectListener mSelectChangeCallback;
 
-    public void setSelectChangeCallback(ISelectTimeCallback mSelectChangeCallback) {
+    public void setSelectChangeCallback(OnDateTimeSelectListener mSelectChangeCallback) {
         this.mSelectChangeCallback = mSelectChangeCallback;
     }
 

@@ -6,11 +6,10 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.bigkoo.pickerview.listener.ISelectTimeCallback;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import me.foolishchow.android.datepicker.OnDateTimeSelectListener;
 import me.foolishchow.android.datepicker.WheelTime;
 import me.foolishchow.android.datepicker.options.DatePickerOption;
 import me.foolishchow.android.sample.databinding.ActivityMainBinding;
@@ -41,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         wheelTime.setRangDate(option.getRangeStart(),option.getRangeEnd());
         wheelTime.setStyle(option.getStyle());
 
-        wheelTime.setSelectChangeCallback(new ISelectTimeCallback() {
+        wheelTime.setSelectChangeCallback(new OnDateTimeSelectListener() {
             @Override
             public void onTimeSelectChanged() {
                 Log.e("onTimeSelectChanged", FORMAT.format(wheelTime.getTime()));

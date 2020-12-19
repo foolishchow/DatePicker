@@ -4,11 +4,10 @@ package me.foolishchow.android.datepicker.options;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.bigkoo.pickerview.listener.ISelectTimeCallback;
-
 import java.util.Calendar;
 import java.util.Date;
 
+import me.foolishchow.android.datepicker.OnDateTimeSelectListener;
 import me.foolishchow.android.datepicker.Utils;
 import me.foolishchow.android.datepicker.WheelTime;
 
@@ -31,7 +30,7 @@ public class DatePickerOption {
     protected Calendar mSelected = Calendar.getInstance();
 
     @Nullable
-    protected ISelectTimeCallback mOnDatePickerChangeListener;
+    protected OnDateTimeSelectListener mOnDatePickerChangeListener;
 
     @NonNull
     public Calendar getRangeStart() {
@@ -131,11 +130,11 @@ public class DatePickerOption {
 
 
     @NonNull
-    public ISelectTimeCallback getOnDatePickerChangeListener() {
+    public OnDateTimeSelectListener getOnDatePickerChangeListener() {
         return mOnDatePickerChangeListener;
     }
 
-    public DatePickerOption setOnDatePickerChangeListener(@NonNull ISelectTimeCallback onDatePickerChangeListener) {
+    public DatePickerOption setOnDatePickerChangeListener(@NonNull OnDateTimeSelectListener onDatePickerChangeListener) {
         mOnDatePickerChangeListener = onDatePickerChangeListener;
         return this;
     }
