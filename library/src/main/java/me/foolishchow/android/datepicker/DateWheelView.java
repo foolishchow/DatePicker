@@ -94,17 +94,22 @@ public class DateWheelView extends com.contrarywind.view.WheelView {
         final int value = a.getInt(R.styleable.DateWheelView_android_value, min);
         setCurrentItem(value - min);
 
+        if(isInEditMode()){
+            setAdapter(new NumericWheelAdapter(min, max));// 设置"年"的显示数据
+        }
 
-        setAdapter(new NumericWheelAdapter(min, max));// 设置"年"的显示数据
+        boolean is_circle = a.getBoolean(R.styleable.DateWheelView_is_circle,false);
+        setCyclic(is_circle);
+
         a.recycle();//回收内存
-        setOnItemSelectedListener(new OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(int index) {
-                Log.e("onItemSelected",
-                        String.format("index %d value %d ", index,
-                                min + index));
-            }
-        });
+        //setOnItemSelectedListener(new OnItemSelectedListener() {
+        //    @Override
+        //    public void onItemSelected(int index) {
+        //        Log.e("onItemSelected",
+        //                String.format("index %d value %d ", index,
+        //                        min + index));
+        //    }
+        //});
 
     }
 

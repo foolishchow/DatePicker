@@ -14,6 +14,7 @@
         android:orientation="horizontal">
 
         <me.foolishchow.android.datepicker.DateWheelView
+            android:id="@+id/year"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -28,6 +29,7 @@
             tools:ignore="HardcodedText" />
 
         <me.foolishchow.android.datepicker.DateWheelView
+            android:id="@+id/month"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -41,6 +43,7 @@
             tools:ignore="HardcodedText" />
 
         <me.foolishchow.android.datepicker.DateWheelView
+            android:id="@+id/day"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -49,7 +52,46 @@
             android:textSize="20sp"
             android:value="2000"
             app:line_spacing_multiplier="2"
+            app:max="31"
+            app:min="1"
+            tools:ignore="HardcodedText" />
+        <me.foolishchow.android.datepicker.DateWheelView
+            android:id="@+id/hour"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/roboto_medium"
+            android:label="时"
+            android:textSize="20sp"
+            android:value="2000"
+            app:line_spacing_multiplier="2"
+            app:max="31"
+            app:min="1"
+            tools:ignore="HardcodedText" />
+        <me.foolishchow.android.datepicker.DateWheelView
+            android:id="@+id/minute"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/roboto_medium"
+            android:label="分"
+            android:textSize="20sp"
+            android:value="2000"
+            app:line_spacing_multiplier="2"
+            app:max="31"
+            app:min="1"
             app:text_x_offset="-1"
+            tools:ignore="HardcodedText" />
+        <me.foolishchow.android.datepicker.DateWheelView
+            android:id="@+id/second"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/roboto_medium"
+            android:label="秒"
+            android:textSize="20sp"
+            android:value="2000"
+            app:line_spacing_multiplier="2"
             app:max="31"
             app:min="1"
             tools:ignore="HardcodedText" />

@@ -18,4 +18,9 @@ public class DateWheelVo implements IPickerViewData {
     public String getPickerViewText() {
         return label;
     }
+
+    @Override
+    public String toString() {
+        return "DateWheelVo{label='" + label + '\'' + ", value=" + value + '}';
+    }
 }

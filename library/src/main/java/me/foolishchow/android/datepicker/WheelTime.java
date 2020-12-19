@@ -1,5 +1,6 @@
 package me.foolishchow.android.datepicker;
 
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.IntDef;
@@ -15,14 +16,16 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import me.foolishchow.android.datepicker.adapters.DateWheelAdapter;
+import me.foolishchow.android.datepicker.data.DateWheelVo;
 
 /**
  * 对比原版 WheelTime 主要改变的几个点
  * 1. 数据校验不在此处进行 全部交由{@link me.foolishchow.android.datepicker.options.DatePickerOption} 处理 所有的数据都确保是validated
- * 2. 控件外部可控 你需要展示什么就初始化什么 不需要的就设置为初始null 不在关心布局
+ * 2. 控件外部可控 你需要展示什么就初始化什么 不需要的就设置为初始null 不再关心布局
  * 3. 时间range校验流程修改
  */
 public class WheelTime {
@@ -46,6 +49,7 @@ public class WheelTime {
     private WheelView mMinuteWheel;
     @Nullable
     private WheelView mSecondWheel;
+
     public void setWheels(
             @Nullable DateWheelView year, @Nullable DateWheelView month, @Nullable DateWheelView day,
             @Nullable DateWheelView hour, @Nullable DateWheelView minute, @Nullable DateWheelView second
@@ -80,23 +84,6 @@ public class WheelTime {
     public @interface DateStyle {
     }
 
-    @DateStyle
-    private int mDateStyle = STYLE_DATE;
-
-    public void setStyle(@DateStyle int style) {
-        mDateStyle = style;
-        boolean[] displayConfig = DISPLAY_CONFIG[mDateStyle];
-        toggleVisible(mYearWheel, displayConfig[0]);
-        initYearChangeListener();
-        toggleVisible(mMonthWheel, displayConfig[1]);
-        toggleVisible(mDayWheel, displayConfig[2]);
-        toggleVisible(mHourWheel, displayConfig[3]);
-        toggleVisible(mMinuteWheel, displayConfig[4]);
-        toggleVisible(mSecondWheel, displayConfig[5]);
-
-    }
-
-
     private void toggleVisible(@Nullable WheelView wheelView, boolean isVisible) {
         if (wheelView != null) {
             wheelView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
@@ -126,27 +113,126 @@ public class WheelTime {
     private boolean isSecondVisible() {
         return DISPLAY_CONFIG[mDateStyle][5];
     }
+
+
+    @DateStyle
+    private int mDateStyle = STYLE_DATE;
+
+    public void setStyle(@DateStyle int style) {
+        mDateStyle = style;
+        boolean[] displayConfig = DISPLAY_CONFIG[mDateStyle];
+        toggleVisible(mYearWheel, displayConfig[0]);
+        initYearWheel();
+        toggleVisible(mMonthWheel, displayConfig[1]);
+        initMonthWheel();
+        toggleVisible(mDayWheel, displayConfig[2]);
+        initDayWheel();
+        toggleVisible(mHourWheel, displayConfig[3]);
+        initHourWheel();
+        toggleVisible(mMinuteWheel, displayConfig[4]);
+        initMinuteWheel();
+        toggleVisible(mSecondWheel, displayConfig[5]);
+        initSecondWheel();
+    }
+
+    private DateWheelAdapter mYearAdapter = new DateWheelAdapter();
+    private DateWheelAdapter mMonthAdapter = new DateWheelAdapter();
+    private DateWheelAdapter mDayAdapter = new DateWheelAdapter();
+    private DateWheelAdapter mHourAdapter = new DateWheelAdapter();
+    private DateWheelAdapter mMinuteAdapter = new DateWheelAdapter();
+    private DateWheelAdapter mSecondAdapter = new DateWheelAdapter();
+
+    private void initYearWheel() {
+        if (!isYearVisible() || mYearWheel == null) return;
+        mYearAdapter.reRange(mRangeStart[0], mRangeEnd[0]);
+        // 年
+        mYearWheel.setAdapter(mYearAdapter);// 设置"年"的显示数据
+        mYearWheel.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(int index) {
+                DateWheelVo item = mYearAdapter.getItem(index);
+                mSelected[0] = item.value;
+                emitTimeChanged();
+            }
+        });
+    }
+
+    private void initMonthWheel() {
+        if (!isMonthVisible() || mMonthWheel == null) return;
+        mMonthAdapter.reRange(1, 12);
+        mMonthWheel.setAdapter(mMonthAdapter);
+        // 添加"月"监听
+        mMonthWheel.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(int index) {
+                mSelected[1] = mMonthAdapter.getItem(index).value;
+                emitTimeChanged();
+            }
+        });
+    }
+
+    private void initDayWheel() {
+        if (!isDayVisible() || mDayWheel == null) return;
+        mDayAdapter.reRange(1, 31);
+        mDayWheel.setAdapter(mDayAdapter);
+        mDayWheel.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(int index) {
+                mSelected[2] = mDayAdapter.getItem(index).value;
+                emitTimeChanged();
+            }
+        });
+    }
+
+    private void initHourWheel() {
+        if (!isHourVisible() || mHourWheel == null) return;
+        mHourAdapter.reRange(1, 24);
+        mHourWheel.setAdapter(mHourAdapter);
+        mHourWheel.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(int index) {
+                mSelected[3] = mHourAdapter.getItem(index).value;
+                mSelectChangeCallback.onTimeSelectChanged();
+            }
+        });
+    }
+
+    private void initMinuteWheel() {
+        if (!isMinuteVisible() || mMinuteWheel == null) return;
+        mMinuteAdapter.reRange(1, 60);
+        mMinuteWheel.setAdapter(mMinuteAdapter);
+        mMinuteWheel.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(int index) {
+                mSelected[4] = mMinuteAdapter.getItem(index).value;
+                emitTimeChanged();
+            }
+        });
+    }
+
+    private void initSecondWheel() {
+        if (!isSecondVisible() || mSecondWheel == null) return;
+        mSecondAdapter.reRange(1, 60);
+        mSecondWheel.setAdapter(mSecondAdapter);
+        mSecondWheel.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(int index) {
+                mSelected[5] = mSecondAdapter.getItem(index).value;
+                emitTimeChanged();
+            }
+        });
+    }
     //endregion
+
 
     //region 数据
     private int[] mRangeStart = new int[]{1990, 1, 1, 0, 0, 0};
     private int[] mRangeEnd = new int[]{2100, 12, 31, 23, 59, 59};
     private int[] mSelected = new int[]{1990, 1, 1, 0, 0, 0};
 
-    //private int mStartYear = 1990;
-    //private int mStartMonth = 1;
-    //private int mStartDay = 1;
-    //
-    //private int mEndYear = 2100;
-    //private int mEndMonth = 12;
-    //private int mEndDay = 31; //表示31天的
-
-    //private int mCurrentYear;
-    //endregion
-
     public void setSelected(Calendar calendar) {
         int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
+        int month = calendar.get(Calendar.MONTH) + 1;
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
@@ -161,334 +247,91 @@ public class WheelTime {
 
     public void setSelected(int year, final int month, int day, int hour, int minute, int second) {
         //show year
-        if (isYearVisible() && mYearWheel != null) {
-            initYearWheel(year);
-        }
+        setYearSelected(year);
         //show month
-        if (isMonthVisible()) {
-            initMonthWheel(year, month);
-        }
+        setMonthSelected(month);
         //show year
-        if (isDayVisible()) {
-            initDayWheel(year, month, day);
-        }
-        initHourWheel(hour);
-        initMinuteWheel(minute);
-        initSecondWheel(second);
+        setDaySelected(day);
+        setHourSelected(hour);
+        setMinuteSelected(minute);
+        setSecondSelected(second);
+
     }
 
-    //region 事件监听
-    private void initSecondWheel(int second) {
-        //秒
-        //mSecondWheel = (WheelView) mWrapView.findViewById(R.id.second);
-        mSecondWheel.setAdapter(new NumericWheelAdapter(0, 59));
-        mSecondWheel.setCurrentItem(second);
-        setChangedListener(mSecondWheel);
-    }
-
-    private void initMinuteWheel(int minute) {
-        //分
-        //mMinuteWheel = (WheelView) mWrapView.findViewById(R.id.min);
-        mMinuteWheel.setAdapter(new NumericWheelAdapter(0, 59));
-        mMinuteWheel.setCurrentItem(minute);
-        setChangedListener(mMinuteWheel);
-    }
-
-    private void initHourWheel(int hour) {
-        //时
-        //mHourWheel = (WheelView) mWrapView.findViewById(R.id.hour);
-        mHourWheel.setAdapter(new NumericWheelAdapter(0, 23));
-        mHourWheel.setCurrentItem(hour);
-        setChangedListener(mHourWheel);
-    }
-
-    private void initDayWheel(int year, int month, int day) {
-        // 日
-        //mDayWheel = (WheelView) mWrapView.findViewById(R.id.day);
-        boolean leapYear = (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
-        if (mStartYear == mEndYear && mStartMonth == mEndMonth) {
-            if (FULL_MONTH_LIST.contains(String.valueOf(month + 1))) {
-                if (mEndDay > 31) {
-                    mEndDay = 31;
-                }
-                mDayWheel.setAdapter(new NumericWheelAdapter(mStartDay, mEndDay));
-            } else if (LESS_MONTH_List.contains(String.valueOf(month + 1))) {
-                if (mEndDay > 30) {
-                    mEndDay = 30;
-                }
-                mDayWheel.setAdapter(new NumericWheelAdapter(mStartDay, mEndDay));
-            } else {
-                // 闰年
-                if (leapYear) {
-                    if (mEndDay > 29) {
-                        mEndDay = 29;
-                    }
-                    mDayWheel.setAdapter(new NumericWheelAdapter(mStartDay, mEndDay));
-                } else {
-                    if (mEndDay > 28) {
-                        mEndDay = 28;
-                    }
-                    mDayWheel.setAdapter(new NumericWheelAdapter(mStartDay, mEndDay));
-                }
-            }
-            mDayWheel.setCurrentItem(day - mStartDay);
-        } else if (year == mStartYear && month + 1 == mStartMonth) {
-            // 起始日期的天数控制
-            if (FULL_MONTH_LIST.contains(String.valueOf(month + 1))) {
-
-                mDayWheel.setAdapter(new NumericWheelAdapter(mStartDay, 31));
-            } else if (LESS_MONTH_List.contains(String.valueOf(month + 1))) {
-
-                mDayWheel.setAdapter(new NumericWheelAdapter(mStartDay, 30));
-            } else {
-                // 闰年 29，平年 28
-                mDayWheel.setAdapter(new NumericWheelAdapter(mStartDay, leapYear ? 29 : 28));
-            }
-            mDayWheel.setCurrentItem(day - mStartDay);
-        } else if (year == mEndYear && month + 1 == mEndMonth) {
-            // 终止日期的天数控制
-            if (FULL_MONTH_LIST.contains(String.valueOf(month + 1))) {
-                if (mEndDay > 31) {
-                    mEndDay = 31;
-                }
-                mDayWheel.setAdapter(new NumericWheelAdapter(1, mEndDay));
-            } else if (LESS_MONTH_List.contains(String.valueOf(month + 1))) {
-                if (mEndDay > 30) {
-                    mEndDay = 30;
-                }
-                mDayWheel.setAdapter(new NumericWheelAdapter(1, mEndDay));
-            } else {
-                // 闰年
-                if (leapYear) {
-                    if (mEndDay > 29) {
-                        mEndDay = 29;
-                    }
-                    mDayWheel.setAdapter(new NumericWheelAdapter(1, mEndDay));
-                } else {
-                    if (mEndDay > 28) {
-                        mEndDay = 28;
-                    }
-                    mDayWheel.setAdapter(new NumericWheelAdapter(1, mEndDay));
-                }
-            }
-            mDayWheel.setCurrentItem(day - 1);
-        } else {
-            // 判断大小月及是否闰年,用来确定"日"的数据
-            if (FULL_MONTH_LIST.contains(String.valueOf(month + 1))) {
-                mDayWheel.setAdapter(new NumericWheelAdapter(1, 31));
-            } else if (LESS_MONTH_List.contains(String.valueOf(month + 1))) {
-                mDayWheel.setAdapter(new NumericWheelAdapter(1, 30));
-            } else {
-                // 闰年 29，平年 28
-                mDayWheel.setAdapter(new NumericWheelAdapter(mStartDay, leapYear ? 29 : 28));
-            }
-            mDayWheel.setCurrentItem(day - 1);
-        }
-        setChangedListener(mDayWheel);
-    }
-
-    private void initMonthWheel(int year, int month) {
-        // 月
-        //mMonthWheel = (WheelView) mWrapView.findViewById(R.id.month);
-        if (mStartYear == mEndYear) {//开始年等于终止年
-            mMonthWheel.setAdapter(new NumericWheelAdapter(mStartMonth, mEndMonth));
-            mMonthWheel.setCurrentItem(month + 1 - mStartMonth);
-        } else if (year == mStartYear) {
-            //起始日期的月份控制
-            mMonthWheel.setAdapter(new NumericWheelAdapter(mStartMonth, 12));
-            mMonthWheel.setCurrentItem(month + 1 - mStartMonth);
-        } else if (year == mEndYear) {
-            //终止日期的月份控制
-            mMonthWheel.setAdapter(new NumericWheelAdapter(1, mEndMonth));
-            mMonthWheel.setCurrentItem(month);
-        } else {
-            mMonthWheel.setAdapter(new NumericWheelAdapter(1, 12));
-            mMonthWheel.setCurrentItem(month);
-        }
-        // 添加"月"监听
-        mMonthWheel.setOnItemSelectedListener(new OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(int index) {
-                int month_num = index + 1;
-
-                if (mStartYear == mEndYear) {
-                    month_num = month_num + mStartMonth - 1;
-                    if (mStartMonth == mEndMonth) {
-                        //重新设置日
-                        setReDay(mCurrentYear, month_num, mStartDay, mEndDay, FULL_MONTH_LIST, LESS_MONTH_List);
-                    } else if (mStartMonth == month_num) {
-
-                        //重新设置日
-                        setReDay(mCurrentYear, month_num, mStartDay, 31, FULL_MONTH_LIST, LESS_MONTH_List);
-                    } else if (mEndMonth == month_num) {
-                        setReDay(mCurrentYear, month_num, 1, mEndDay, FULL_MONTH_LIST, LESS_MONTH_List);
-                    } else {
-                        setReDay(mCurrentYear, month_num, 1, 31, FULL_MONTH_LIST, LESS_MONTH_List);
-                    }
-                } else if (mCurrentYear == mStartYear) {
-                    month_num = month_num + mStartMonth - 1;
-                    if (month_num == mStartMonth) {
-                        //重新设置日
-                        setReDay(mCurrentYear, month_num, mStartDay, 31, FULL_MONTH_LIST, LESS_MONTH_List);
-                    } else {
-                        //重新设置日
-                        setReDay(mCurrentYear, month_num, 1, 31, FULL_MONTH_LIST, LESS_MONTH_List);
-                    }
-
-                } else if (mCurrentYear == mEndYear) {
-                    if (month_num == mEndMonth) {
-                        //重新设置日
-                        setReDay(mCurrentYear, mMonthWheel.getCurrentItem() + 1, 1, mEndDay, FULL_MONTH_LIST, LESS_MONTH_List);
-                    } else {
-                        setReDay(mCurrentYear, mMonthWheel.getCurrentItem() + 1, 1, 31, FULL_MONTH_LIST, LESS_MONTH_List);
-                    }
-
-                } else {
-                    //重新设置日
-                    setReDay(mCurrentYear, month_num, 1, 31, FULL_MONTH_LIST, LESS_MONTH_List);
-                }
-
-                emitTimeChanged();
-            }
-        });
-    }
-
-    private void initYearChangeListener() {
+    private void setYearSelected(int year) {
+        mSelected[0] = year;
         if (!isYearVisible() || mYearWheel == null) return;
-        // 添加"年"监听
-        mYearWheel.setOnItemSelectedListener(new OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(int index) {
-                int year_num = mYearAdapter.getItem(index).value;
-                mCurrentYear = year_num;
-                int currentMonthItem = mMonthWheel.getCurrentItem();//记录上一次的item位置
-                // 判断大小月及是否闰年,用来确定"日"的数据
-                if (mStartYear == mEndYear) {
-                    //重新设置月份
-                    mMonthWheel.setAdapter(new NumericWheelAdapter(mStartMonth, mEndMonth));
-
-                    if (currentMonthItem > mMonthWheel.getAdapter().getItemsCount() - 1) {
-                        currentMonthItem = mMonthWheel.getAdapter().getItemsCount() - 1;
-                        mMonthWheel.setCurrentItem(currentMonthItem);
-                    }
-
-                    int monthNum = currentMonthItem + mStartMonth;
-
-                    if (mStartMonth == mEndMonth) {
-                        //重新设置日
-                        setReDay(year_num, monthNum, mStartDay, mEndDay, FULL_MONTH_LIST, LESS_MONTH_List);
-                    } else if (monthNum == mStartMonth) {
-                        //重新设置日
-                        setReDay(year_num, monthNum, mStartDay, 31, FULL_MONTH_LIST, LESS_MONTH_List);
-                    } else if (monthNum == mEndMonth) {
-                        setReDay(year_num, monthNum, 1, mEndDay, FULL_MONTH_LIST, LESS_MONTH_List);
-                    } else {//重新设置日
-                        setReDay(year_num, monthNum, 1, 31, FULL_MONTH_LIST, LESS_MONTH_List);
-                    }
-                } else if (year_num == mStartYear) {//等于开始的年
-                    //重新设置月份
-                    mMonthWheel.setAdapter(new NumericWheelAdapter(mStartMonth, 12));
-
-                    if (currentMonthItem > mMonthWheel.getAdapter().getItemsCount() - 1) {
-                        currentMonthItem = mMonthWheel.getAdapter().getItemsCount() - 1;
-                        mMonthWheel.setCurrentItem(currentMonthItem);
-                    }
-
-                    int month = currentMonthItem + mStartMonth;
-                    if (month == mStartMonth) {
-                        //重新设置日
-                        setReDay(year_num, month, mStartDay, 31, FULL_MONTH_LIST, LESS_MONTH_List);
-                    } else {
-                        //重新设置日
-                        setReDay(year_num, month, 1, 31, FULL_MONTH_LIST, LESS_MONTH_List);
-                    }
-
-                } else if (year_num == mEndYear) {
-                    //重新设置月份
-                    mMonthWheel.setAdapter(new NumericWheelAdapter(1, mEndMonth));
-                    if (currentMonthItem > mMonthWheel.getAdapter().getItemsCount() - 1) {
-                        currentMonthItem = mMonthWheel.getAdapter().getItemsCount() - 1;
-                        mMonthWheel.setCurrentItem(currentMonthItem);
-                    }
-                    int monthNum = currentMonthItem + 1;
-
-                    if (monthNum == mEndMonth) {
-                        //重新设置日
-                        setReDay(year_num, monthNum, 1, mEndDay, FULL_MONTH_LIST, LESS_MONTH_List);
-                    } else {
-                        //重新设置日
-                        setReDay(year_num, monthNum, 1, 31, FULL_MONTH_LIST, LESS_MONTH_List);
-                    }
-
-                } else {
-                    //重新设置月份
-                    mMonthWheel.setAdapter(new NumericWheelAdapter(1, 12));
-                    //重新设置日
-                    setReDay(year_num, mMonthWheel.getCurrentItem() + 1, 1, 31, FULL_MONTH_LIST, LESS_MONTH_List);
-                }
-
-                emitTimeChanged();
-            }
-        });
-    }
-
-
-    private DateWheelAdapter mYearAdapter = new DateWheelAdapter();
-    private void initYearWheel(int year) {
-        mCurrentYear = year;
-        mYearAdapter.reRange(mRangeStart[0], mRangeEnd[0]);
-        // 年
-        //mYearWheel = (WheelView) mWrapView.findViewById(R.id.year);
-        mYearWheel.setAdapter(mYearAdapter);// 设置"年"的显示数据
         mYearWheel.setCurrentItem(year - mRangeStart[0]);// 初始化时显示的数据
     }
 
-
-    private void setChangedListener(WheelView wheelView) {
-        if (mSelectChangeCallback != null) {
-            wheelView.setOnItemSelectedListener(new OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(int index) {
-                    mSelectChangeCallback.onTimeSelectChanged();
-                }
-            });
+    private void setMonthSelected(int month) {
+        mSelected[1] = month;
+        if (!isMonthVisible() || mMonthWheel == null) return;
+        int monthStart = 1;
+        int monthEnd = 12;
+        int mSelectedYear = mSelected[0];
+        if (mSelectedYear == mRangeStart[0]) {
+            monthStart = mRangeStart[1];
         }
+        if (mSelectedYear == mRangeEnd[0]) {
+            monthEnd = mRangeEnd[1];
+        }
+        mMonthAdapter.reRange(monthStart, monthEnd);
+        mMonthWheel.setCurrentItem(month - monthStart);
+    }
 
+    private void setDaySelected(int day) {
+        mSelected[2] = day;
+        if (!isDayVisible() || mDayWheel == null) return;
+        int mSelectedYear = mSelected[0];
+        int mSelectMonth = mSelected[1];
+
+        int dayStart = 1;
+        int dayEnd = 31;
+        if (mSelectedYear == mRangeStart[0] && mSelectMonth == mRangeStart[1]) {
+            dayStart = mRangeStart[2];
+        }
+        if (mSelectedYear == mRangeEnd[0] && mSelectMonth == mRangeEnd[1]) {
+            dayEnd = mRangeEnd[2];
+        }
+        mDayAdapter.reRange(dayStart, dayEnd);
+        mDayWheel.setCurrentItem(mDayAdapter.getItemIndex(mSelected[2]));
+    }
+
+    private void setHourSelected(int hour) {
+        mSelected[3] = hour;
+        if (!isHourVisible() || mHourWheel == null) return;
+        //时
+        mHourAdapter.reRange(0, 23);
+        //mHourWheel.setAdapter(new NumericWheelAdapter(0, 23));
+        mHourWheel.setCurrentItem(hour);
+    }
+
+    private void setMinuteSelected(int minute) {
+        mSelected[4] = minute;
+        if (!isMinuteVisible() || mMinuteWheel == null) return;
+        //分
+        mMinuteAdapter.reRange(0, 59);
+        //mMinuteWheel.setAdapter(new NumericWheelAdapter(0, 59));
+        mMinuteWheel.setCurrentItem(minute);
+    }
+
+    private void setSecondSelected(int second) {
+        mSelected[5] = second;
+        if (!isSecondVisible() || mSecondWheel == null) return;
+        //秒
+        mSecondAdapter.reRange(0, 59);
+        //mSecondWheel.setAdapter(new NumericWheelAdapter(0, 59));
+        mSecondWheel.setCurrentItem(second);
     }
     //endregion
 
-    private void setReDay(int year_num, int monthNum, int startD, int endD, List<String> list_big, List<String> list_little) {
-        int currentItem = mDayWheel.getCurrentItem();
+    //region 事件监听
 
-        if (list_big.contains(String.valueOf(monthNum))) {
-            if (endD > 31) {
-                endD = 31;
-            }
-            mDayWheel.setAdapter(new com.bigkoo.pickerview.adapter.NumericWheelAdapter(startD, endD));
-        } else if (list_little.contains(String.valueOf(monthNum))) {
-            if (endD > 30) {
-                endD = 30;
-            }
-            mDayWheel.setAdapter(new com.bigkoo.pickerview.adapter.NumericWheelAdapter(startD, endD));
-        } else {
-            if ((year_num % 4 == 0 && year_num % 100 != 0)
-                    || year_num % 400 == 0) {
-                if (endD > 29) {
-                    endD = 29;
-                }
-                mDayWheel.setAdapter(new com.bigkoo.pickerview.adapter.NumericWheelAdapter(startD, endD));
-            } else {
-                if (endD > 28) {
-                    endD = 28;
-                }
-                mDayWheel.setAdapter(new NumericWheelAdapter(startD, endD));
-            }
-        }
+    //endregion
 
-        if (currentItem > mDayWheel.getAdapter().getItemsCount() - 1) {
-            currentItem = mDayWheel.getAdapter().getItemsCount() - 1;
-            mDayWheel.setCurrentItem(currentItem);
-        }
+    private void setReDay(int year_num, int monthNum, int startD, int endD) {
+
     }
 
     private void updateDateArray(int[] array, @NonNull Calendar calendar) {
@@ -505,6 +348,9 @@ public class WheelTime {
         updateDateArray(mRangeEnd, endDate);
     }
 
+    //region callback
+    private ISelectTimeCallback mSelectChangeCallback;
+
     public void setSelectChangeCallback(ISelectTimeCallback mSelectChangeCallback) {
         this.mSelectChangeCallback = mSelectChangeCallback;
     }
@@ -514,40 +360,19 @@ public class WheelTime {
             mSelectChangeCallback.onTimeSelectChanged();
         }
     }
-    private ISelectTimeCallback mSelectChangeCallback;
+    //endregion
 
-
-    //todo return Date or Calendar
-    public String getTime() {
-        StringBuilder sb = new StringBuilder();
-        if (mCurrentYear == mStartYear) {
-           /* int i = wv_month.getCurrentItem() + startMonth;
-            System.out.println("i:" + i);*/
-            if ((mMonthWheel.getCurrentItem() + mStartMonth) == mStartMonth) {
-                sb.append((mYearWheel.getCurrentItem() + mStartYear)).append("-")
-                        .append((mMonthWheel.getCurrentItem() + mStartMonth)).append("-")
-                        .append((mDayWheel.getCurrentItem() + mStartDay)).append(" ")
-                        .append(mHourWheel.getCurrentItem()).append(":")
-                        .append(mMinuteWheel.getCurrentItem()).append(":")
-                        .append(mSecondWheel.getCurrentItem());
-            } else {
-                sb.append((mYearWheel.getCurrentItem() + mStartYear)).append("-")
-                        .append((mMonthWheel.getCurrentItem() + mStartMonth)).append("-")
-                        .append((mDayWheel.getCurrentItem() + 1)).append(" ")
-                        .append(mHourWheel.getCurrentItem()).append(":")
-                        .append(mMinuteWheel.getCurrentItem()).append(":")
-                        .append(mSecondWheel.getCurrentItem());
-            }
-
-        } else {
-            sb.append((mYearWheel.getCurrentItem() + mStartYear)).append("-")
-                    .append((mMonthWheel.getCurrentItem() + 1)).append("-")
-                    .append((mDayWheel.getCurrentItem() + 1)).append(" ")
-                    .append(mHourWheel.getCurrentItem()).append(":")
-                    .append(mMinuteWheel.getCurrentItem()).append(":")
-                    .append(mSecondWheel.getCurrentItem());
-        }
-
-        return sb.toString();
+    public Date getTime() {
+        Log.e("getTime",
+                String.format("%02d-%02d-%02d %02d:%02d:%02d",
+                        mSelected[0], mSelected[1], mSelected[2],
+                        mSelected[3], mSelected[4], mSelected[5]
+                )
+        );
+        return Utils.asDate(
+                mSelected[0], mSelected[1], mSelected[2],
+                mSelected[3], mSelected[4], mSelected[5]);
     }
+
+
 }

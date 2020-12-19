@@ -8,6 +8,7 @@
         <attr name="android:textStyle" />
         <attr name="alpha_gradient" format="boolean"/>
         <attr name="item_visible_count" format="integer"/>
+        <attr name="is_circle" format="boolean"/>
         <attr name="text_x_offset" format="integer"/>
         <attr name="divider_color" format="color"/>
         <attr name="divider_width" format="dimension"/>

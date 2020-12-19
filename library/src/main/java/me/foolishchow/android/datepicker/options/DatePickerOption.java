@@ -4,10 +4,12 @@ package me.foolishchow.android.datepicker.options;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bigkoo.pickerview.listener.ISelectTimeCallback;
+
 import java.util.Calendar;
 import java.util.Date;
 
-import me.foolishchow.android.datepicker.OnDatePickerChangeListener;
+import me.foolishchow.android.datepicker.Utils;
 import me.foolishchow.android.datepicker.WheelTime;
 
 /**
@@ -29,15 +31,24 @@ public class DatePickerOption {
     protected Calendar mSelected = Calendar.getInstance();
 
     @Nullable
-    protected OnDatePickerChangeListener mOnDatePickerChangeListener;
+    protected ISelectTimeCallback mOnDatePickerChangeListener;
 
-    @Nullable
+    @NonNull
     public Calendar getRangeStart() {
         return mRangeStart;
     }
 
     public void setRangeStart(@Nullable Date rangeStart) {
-        setRangeStart(rangeStart == null ? null : asCalendar(rangeStart));
+        setRangeStart(rangeStart == null ? null : Utils.asCalendar(rangeStart));
+    }
+
+    public void setRangeStart(int year, int month, int dayOfMonth,
+                              int hourOfDay, int minute, int second) {
+        setRangeStart(Utils.asCalendar(year, month, dayOfMonth, hourOfDay, minute, second));
+    }
+
+    public void setRangeStart(int year, int month, int dayOfMonth) {
+        setRangeStart(Utils.asCalendar(year, month, dayOfMonth, 0, 0, 0));
     }
 
     public void setRangeStart(@Nullable Calendar rangeStart) {
@@ -53,13 +64,24 @@ public class DatePickerOption {
     }
 
 
-    @Nullable
+    @NonNull
     public Calendar getRangeEnd() {
         return mRangeEnd;
     }
 
+    public void setRangeEnd(int year, int month, int dayOfMonth) {
+        setRangeEnd(Utils.asCalendar(year, month, dayOfMonth, 0, 0, 0));
+    }
+
+    public void setRangeEnd(int year, int month, int dayOfMonth,
+                            int hourOfDay, int minute, int second
+    ) {
+        setRangeEnd(Utils.asCalendar(year, month, dayOfMonth, hourOfDay, minute, second));
+    }
+
+
     public void setRangeEnd(@Nullable Date rangeEnd) {
-        setRangeEnd(rangeEnd == null ? null : asCalendar(rangeEnd));
+        setRangeEnd(rangeEnd == null ? null : Utils.asCalendar(rangeEnd));
     }
 
     public void setRangeEnd(@Nullable Calendar rangeEnd) {
@@ -79,8 +101,18 @@ public class DatePickerOption {
         return mSelected;
     }
 
+
+    public void setSelected(int year, int month, int dayOfMonth) {
+        setSelected(Utils.asCalendar(year, month, dayOfMonth, 0, 0, 0));
+    }
+
+    public void setSelected(int year, int month, int dayOfMonth,
+                            int hourOfDay, int minute, int second) {
+        setSelected(Utils.asCalendar(year, month, dayOfMonth, hourOfDay, minute, second));
+    }
+
     public void setSelected(@Nullable Date selected) {
-        mSelected = selected == null ? Calendar.getInstance() : asCalendar(selected);
+        mSelected = selected == null ? Calendar.getInstance() : Utils.asCalendar(selected);
     }
 
     public void setSelected(@Nullable Calendar selected) {
@@ -99,32 +131,16 @@ public class DatePickerOption {
 
 
     @NonNull
-    public OnDatePickerChangeListener getOnDatePickerChangeListener() {
+    public ISelectTimeCallback getOnDatePickerChangeListener() {
         return mOnDatePickerChangeListener;
     }
 
-    public DatePickerOption setOnDatePickerChangeListener(@NonNull OnDatePickerChangeListener onDatePickerChangeListener) {
+    public DatePickerOption setOnDatePickerChangeListener(@NonNull ISelectTimeCallback onDatePickerChangeListener) {
         mOnDatePickerChangeListener = onDatePickerChangeListener;
         return this;
     }
 
 
-    public static Calendar asCalendar(int year, int month, int date) {
-        Calendar result = Calendar.getInstance();
-        result.set(year, month - 1, date);
-        return result;
-    }
-
-    public static Calendar asCalendar(Date date) {
-        Calendar result = Calendar.getInstance();
-        result.setTime(date);
-        return result;
-    }
-
-    public static Date asDate(int year, int month, int date) {
-        return new Date(asCalendar(year, month, date).getTimeInMillis());
-    }
-
-    private static final Calendar sMinRangeStart = asCalendar(1900, 1, 1);
-    private static final Calendar sMaxRangeEnd = asCalendar(2100, 12, 31);
+    private static final Calendar sMinRangeStart = Utils.asCalendar(1900, 1, 1);
+    private static final Calendar sMaxRangeEnd = Utils.asCalendar(2100, 12, 31);
 }
