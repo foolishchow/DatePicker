@@ -27,9 +27,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(viewBind.getRoot());
 
         DatePickerOption option = new DatePickerOption();
-        option.setRangeStart(2001,1,1);
-        option.setRangeEnd(2004,3,31);
-        option.setSelected(2001,4,2);
+        option.setRangeStart(2020,12,20,0,30,0);
+        //option.setRangeEnd(2003,6,20);
+        option.setSelected(2020,12,20,0,31,0);
+        //option.setSelected(2020,12,20,0,31,0);
         option.setStyle(WheelTime.STYLE_DATE_HOUR_MINUTE);
 
 

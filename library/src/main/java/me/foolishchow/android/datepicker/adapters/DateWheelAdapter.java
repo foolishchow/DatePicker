@@ -11,11 +11,11 @@ import me.foolishchow.android.datepicker.data.DateWheelVo;
 
 public class DateWheelAdapter implements WheelAdapter<DateWheelVo> {
 
-
     public static DateWheelVo mDefault = new DateWheelVo("01",0);
 
     private int mStart = 0;
     private int mEnd = 0;
+
     public void reRange(int start, int end) {
         if(mStart == start && mEnd == end) return;
         mStart = start;
