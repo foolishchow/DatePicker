@@ -7,7 +7,6 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.bigkoo.pickerview.adapter.NumericWheelAdapter;
 import com.bigkoo.pickerview.listener.ISelectTimeCallback;
 import com.contrarywind.listener.OnItemSelectedListener;
 import com.contrarywind.view.WheelView;
@@ -29,11 +28,8 @@ import me.foolishchow.android.datepicker.data.DateWheelVo;
  * 3. 时间range校验流程修改
  */
 public class WheelTime {
-    // 添加大小月月份并将其转换为list,方便之后的判断
-    //String[] months_big = {"1", "3", "5", "7", "8", "10", "12"};
-    //String[] months_little = {"4", "6", "9", "11"};
-    private static final List<String> FULL_MONTH_LIST = Arrays.asList("1", "3", "5", "7", "8", "10", "12");
-    private static final List<String> LESS_MONTH_List = Arrays.asList("4", "6", "9", "11");
+    private static final List<Integer> FULL_MONTH_LIST = Arrays.asList(1, 3, 5, 7, 8, 10, 12);
+    private static final List<Integer> LESS_MONTH_List = Arrays.asList(4, 6, 9, 11);
 
 
     //region 控件
@@ -90,28 +86,28 @@ public class WheelTime {
         }
     }
 
-    private boolean isYearVisible() {
-        return DISPLAY_CONFIG[mDateStyle][0];
+    private boolean isYearInVisible() {
+        return !DISPLAY_CONFIG[mDateStyle][0];
     }
 
-    private boolean isMonthVisible() {
-        return DISPLAY_CONFIG[mDateStyle][1];
+    private boolean isMonthInVisible() {
+        return !DISPLAY_CONFIG[mDateStyle][1];
     }
 
-    private boolean isDayVisible() {
-        return DISPLAY_CONFIG[mDateStyle][2];
+    private boolean isDayInVisible() {
+        return !DISPLAY_CONFIG[mDateStyle][2];
     }
 
-    private boolean isHourVisible() {
-        return DISPLAY_CONFIG[mDateStyle][3];
+    private boolean isHourInVisible() {
+        return !DISPLAY_CONFIG[mDateStyle][3];
     }
 
-    private boolean isMinuteVisible() {
-        return DISPLAY_CONFIG[mDateStyle][4];
+    private boolean isMinuteInVisible() {
+        return !DISPLAY_CONFIG[mDateStyle][4];
     }
 
-    private boolean isSecondVisible() {
-        return DISPLAY_CONFIG[mDateStyle][5];
+    private boolean isSecondInVisible() {
+        return !DISPLAY_CONFIG[mDateStyle][5];
     }
 
 
@@ -143,7 +139,7 @@ public class WheelTime {
     private DateWheelAdapter mSecondAdapter = new DateWheelAdapter();
 
     private void initYearWheel() {
-        if (!isYearVisible() || mYearWheel == null) return;
+        if (isYearInVisible() || mYearWheel == null) return;
         mYearAdapter.reRange(mRangeStart[0], mRangeEnd[0]);
         // 年
         mYearWheel.setAdapter(mYearAdapter);// 设置"年"的显示数据
@@ -158,7 +154,7 @@ public class WheelTime {
     }
 
     private void initMonthWheel() {
-        if (!isMonthVisible() || mMonthWheel == null) return;
+        if (isMonthInVisible() || mMonthWheel == null) return;
         mMonthAdapter.reRange(1, 12);
         mMonthWheel.setAdapter(mMonthAdapter);
         // 添加"月"监听
@@ -172,7 +168,7 @@ public class WheelTime {
     }
 
     private void initDayWheel() {
-        if (!isDayVisible() || mDayWheel == null) return;
+        if (isDayInVisible() || mDayWheel == null) return;
         mDayAdapter.reRange(1, 31);
         mDayWheel.setAdapter(mDayAdapter);
         mDayWheel.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -185,7 +181,7 @@ public class WheelTime {
     }
 
     private void initHourWheel() {
-        if (!isHourVisible() || mHourWheel == null) return;
+        if (isHourInVisible() || mHourWheel == null) return;
         mHourAdapter.reRange(1, 24);
         mHourWheel.setAdapter(mHourAdapter);
         mHourWheel.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -198,7 +194,7 @@ public class WheelTime {
     }
 
     private void initMinuteWheel() {
-        if (!isMinuteVisible() || mMinuteWheel == null) return;
+        if (isMinuteInVisible() || mMinuteWheel == null) return;
         mMinuteAdapter.reRange(1, 60);
         mMinuteWheel.setAdapter(mMinuteAdapter);
         mMinuteWheel.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -211,7 +207,7 @@ public class WheelTime {
     }
 
     private void initSecondWheel() {
-        if (!isSecondVisible() || mSecondWheel == null) return;
+        if (isSecondInVisible() || mSecondWheel == null) return;
         mSecondAdapter.reRange(1, 60);
         mSecondWheel.setAdapter(mSecondAdapter);
         mSecondWheel.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -260,13 +256,13 @@ public class WheelTime {
 
     private void setYearSelected(int year) {
         mSelected[0] = year;
-        if (!isYearVisible() || mYearWheel == null) return;
+        if (isYearInVisible() || mYearWheel == null) return;
         mYearWheel.setCurrentItem(year - mRangeStart[0]);// 初始化时显示的数据
     }
 
     private void setMonthSelected(int month) {
         mSelected[1] = month;
-        if (!isMonthVisible() || mMonthWheel == null) return;
+        if (isMonthInVisible() || mMonthWheel == null) return;
         int monthStart = 1;
         int monthEnd = 12;
         int mSelectedYear = mSelected[0];
@@ -282,7 +278,7 @@ public class WheelTime {
 
     private void setDaySelected(int day) {
         mSelected[2] = day;
-        if (!isDayVisible() || mDayWheel == null) return;
+        if (isDayInVisible() || mDayWheel == null) return;
         int mSelectedYear = mSelected[0];
         int mSelectMonth = mSelected[1];
 
@@ -300,7 +296,7 @@ public class WheelTime {
 
     private void setHourSelected(int hour) {
         mSelected[3] = hour;
-        if (!isHourVisible() || mHourWheel == null) return;
+        if (isHourInVisible() || mHourWheel == null) return;
         //时
         mHourAdapter.reRange(0, 23);
         //mHourWheel.setAdapter(new NumericWheelAdapter(0, 23));
@@ -309,7 +305,7 @@ public class WheelTime {
 
     private void setMinuteSelected(int minute) {
         mSelected[4] = minute;
-        if (!isMinuteVisible() || mMinuteWheel == null) return;
+        if (isMinuteInVisible() || mMinuteWheel == null) return;
         //分
         mMinuteAdapter.reRange(0, 59);
         //mMinuteWheel.setAdapter(new NumericWheelAdapter(0, 59));
@@ -318,7 +314,7 @@ public class WheelTime {
 
     private void setSecondSelected(int second) {
         mSelected[5] = second;
-        if (!isSecondVisible() || mSecondWheel == null) return;
+        if (isSecondInVisible() || mSecondWheel == null) return;
         //秒
         mSecondAdapter.reRange(0, 59);
         //mSecondWheel.setAdapter(new NumericWheelAdapter(0, 59));

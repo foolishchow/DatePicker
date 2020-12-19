@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
         DatePickerOption option = new DatePickerOption();
         option.setRangeStart(2001,1,1);
-        option.setRangeEnd(2001,3,31);
+        option.setRangeEnd(2004,3,31);
         option.setSelected(2001,4,2);
         option.setStyle(WheelTime.STYLE_DATE_HOUR_MINUTE);
 
