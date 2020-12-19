@@ -7,7 +7,7 @@ import androidx.annotation.Nullable;
 import java.util.Calendar;
 import java.util.Date;
 
-import me.foolishchow.android.datepicker.OnDateTimeSelectListener;
+import me.foolishchow.android.datepicker.OnDatePickerSelectListener;
 import me.foolishchow.android.datepicker.Utils;
 import me.foolishchow.android.datepicker.WheelTime;
 
@@ -30,7 +30,7 @@ public class DatePickerOption {
     protected Calendar mSelected = Calendar.getInstance();
 
     @Nullable
-    protected OnDateTimeSelectListener mOnDatePickerChangeListener;
+    protected OnDatePickerSelectListener mOnDatePickerChangeListener;
 
     @NonNull
     public Calendar getRangeStart() {
@@ -130,12 +130,12 @@ public class DatePickerOption {
 
 
     @NonNull
-    public OnDateTimeSelectListener getOnDatePickerChangeListener() {
+    public OnDatePickerSelectListener getOnDatePickerChangeListener() {
         return mOnDatePickerChangeListener;
     }
 
-    public DatePickerOption setOnDatePickerChangeListener(@NonNull OnDateTimeSelectListener onDatePickerChangeListener) {
-        mOnDatePickerChangeListener = onDatePickerChangeListener;
+    public DatePickerOption setOnDatePickerSelectListener(@NonNull OnDatePickerSelectListener listener) {
+        mOnDatePickerChangeListener = listener;
         return this;
     }
 

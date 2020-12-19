@@ -9,7 +9,7 @@ import android.util.Log;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-import me.foolishchow.android.datepicker.OnDateTimeSelectListener;
+import me.foolishchow.android.datepicker.OnDatePickerSelectListener;
 import me.foolishchow.android.datepicker.WheelTime;
 import me.foolishchow.android.datepicker.options.DatePickerOption;
 import me.foolishchow.android.sample.databinding.ActivityMainBinding;
@@ -40,9 +40,9 @@ public class MainActivity extends AppCompatActivity {
         wheelTime.setRangDate(option.getRangeStart(),option.getRangeEnd());
         wheelTime.setStyle(option.getStyle());
 
-        wheelTime.setSelectChangeCallback(new OnDateTimeSelectListener() {
+        wheelTime.setDatePickerSelectListener(new OnDatePickerSelectListener() {
             @Override
-            public void onTimeSelectChanged() {
+            public void onDatePickerSelect() {
                 Log.e("onTimeSelectChanged", FORMAT.format(wheelTime.getTime()));
             }
         });

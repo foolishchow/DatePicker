@@ -278,15 +278,15 @@ public class WheelTime implements DateTimeValidator.ValidatedListener {
     }
 
     //region callback
-    private OnDateTimeSelectListener mSelectChangeCallback;
+    private OnDatePickerSelectListener mOnDatePickerSelectListener;
 
-    public void setSelectChangeCallback(OnDateTimeSelectListener mSelectChangeCallback) {
-        this.mSelectChangeCallback = mSelectChangeCallback;
+    public void setDatePickerSelectListener(OnDatePickerSelectListener listener) {
+        this.mOnDatePickerSelectListener = listener;
     }
 
     private void emitTimeChanged() {
-        if (mSelectChangeCallback != null) {
-            mSelectChangeCallback.onTimeSelectChanged();
+        if (mOnDatePickerSelectListener != null) {
+            mOnDatePickerSelectListener.onDatePickerSelect();
         }
     }
     //endregion
