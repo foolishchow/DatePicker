@@ -4,5 +4,5 @@
     <font
         app:fontStyle="normal"
         app:fontWeight="400"
-        app:font="@font/file_butter_regular" />
+        app:font="@font/butter_regular" />
 </font-family>

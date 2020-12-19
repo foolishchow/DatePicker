@@ -1,0 +1,25 @@
+<component name="InspectionProjectProfileManager">
+  <settings>
+    <info color="750abe">
+      <option name="EFFECT_COLOR" value="750abe" />
+      <option name="ERROR_STRIPE_COLOR" value="750abe" />
+      <option name="EFFECT_TYPE" value="1" />
+      <option name="myName" value="UNSAFE" />
+      <option name="myVal" value="50" />
+      <option name="myExternalName" value="UNSAFE" />
+      <option name="myDefaultAttributes">
+        <option name="ERROR_STRIPE_COLOR" value="750abe" />
+      </option>
+    </info>
+    <list size="8">
+      <item index="0" class="java.lang.String" itemvalue="INFORMATION" />
+      <item index="1" class="java.lang.String" itemvalue="UNSAFE" />
+      <item index="2" class="java.lang.String" itemvalue="TYPO" />
+      <item index="3" class="java.lang.String" itemvalue="SERVER PROBLEM" />
+      <item index="4" class="java.lang.String" itemvalue="WEAK WARNING" />
+      <item index="5" class="java.lang.String" itemvalue="INFO" />
+      <item index="6" class="java.lang.String" itemvalue="WARNING" />
+      <item index="7" class="java.lang.String" itemvalue="ERROR" />
+    </list>
+  </settings>
+</component>
