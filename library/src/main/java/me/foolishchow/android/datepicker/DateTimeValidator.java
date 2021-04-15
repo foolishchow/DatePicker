@@ -214,12 +214,12 @@ public class DateTimeValidator {
 
 
     public Date getTime() {
-        Log.e("getTime",
-                String.format("%02d-%02d-%02d %02d:%02d:%02d",
-                        mSelected[0], mSelected[1], mSelected[2],
-                        mSelected[3], mSelected[4], mSelected[5]
-                )
-        );
+        //Log.e("getTime",
+        //        String.format("%02d-%02d-%02d %02d:%02d:%02d",
+        //                mSelected[0], mSelected[1], mSelected[2],
+        //                mSelected[3], mSelected[4], mSelected[5]
+        //        )
+        //);
         return Utils.asDate(
                 mSelected[0], mSelected[1], mSelected[2],
                 mSelected[3], mSelected[4], mSelected[5]);

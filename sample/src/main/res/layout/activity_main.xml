@@ -20,6 +20,8 @@
             android:layout_weight="1"
             android:fontFamily="@font/pingfang_medium"
             android:label="年"
+            app:textColorOut="#CBDA0673"
+            app:textColorCenter="#ff0000"
             android:textSize="20sp"
             android:value="2000"
             app:line_spacing_multiplier="2"

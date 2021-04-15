@@ -32,6 +32,16 @@ public class DateWheelView extends com.contrarywind.view.WheelView {
         if (attrs == null) return;
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DateWheelView, 0, 0);
 
+        int color = a.getColor(R.styleable.DateWheelView_textColorCenter, -1);
+        if (color != -1) {
+            setTextColorCenter(color);
+        }
+
+        int outColor = a.getColor(R.styleable.DateWheelView_textColorOut, -1);
+        if (outColor != -1) {
+            setTextColorOut(outColor);
+        }
+
 
         float dividerWidth = a.getDimension(R.styleable.DateWheelView_divider_width, 2);
         setDividerWidth((int) dividerWidth);
@@ -39,8 +49,8 @@ public class DateWheelView extends com.contrarywind.view.WheelView {
         int dividerColor = a.getColor(R.styleable.DateWheelView_divider_color, Color.TRANSPARENT);
         setDividerColor(dividerColor);
 
-        int dividerType = a.getInt(R.styleable.DateWheelView_divider_type,0);
-        switch (dividerType){
+        int dividerType = a.getInt(R.styleable.DateWheelView_divider_type, 0);
+        switch (dividerType) {
             case 2:
                 setDividerType(DividerType.CIRCLE);
                 break;
@@ -53,13 +63,13 @@ public class DateWheelView extends com.contrarywind.view.WheelView {
                 break;
         }
 
-        boolean alphaGradient = a.getBoolean(R.styleable.DateWheelView_alpha_gradient,true);
+        boolean alphaGradient = a.getBoolean(R.styleable.DateWheelView_alpha_gradient, true);
         setAlphaGradient(alphaGradient);
 
         int gravity = a.getInt(R.styleable.DateWheelView_android_gravity, Gravity.CENTER);
         setGravity(gravity);
 
-        int textXOffset = a.getInt(R.styleable.DateWheelView_text_x_offset,0);
+        int textXOffset = a.getInt(R.styleable.DateWheelView_text_x_offset, 0);
         setTextXOffset(textXOffset);
 
         int mFontFamily = a.getResourceId(R.styleable.DateWheelView_android_fontFamily, -1);
@@ -76,17 +86,17 @@ public class DateWheelView extends com.contrarywind.view.WheelView {
         setTextSize(px2sp(textSize));
 
         String label = a.getString(R.styleable.DateWheelView_android_label);
-        if(!TextUtils.isEmpty(label)){
+        if (!TextUtils.isEmpty(label)) {
             setLabel(label);
         }
 
-        boolean is_center_label = a.getBoolean(R.styleable.DateWheelView_is_center_label,false);
+        boolean is_center_label = a.getBoolean(R.styleable.DateWheelView_is_center_label, false);
         isCenterLabel(is_center_label);
 
         float lineSpaceMultiplier = a.getFloat(R.styleable.DateWheelView_line_spacing_multiplier, 1.6F);
         setLineSpacingMultiplier(lineSpaceMultiplier);
 
-        int item_visible_count = a.getInt(R.styleable.DateWheelView_item_visible_count,7);
+        int item_visible_count = a.getInt(R.styleable.DateWheelView_item_visible_count, 7);
         setItemsVisibleCount(item_visible_count);
 
         final int min = a.getInt(R.styleable.DateWheelView_min, 0);
@@ -94,11 +104,11 @@ public class DateWheelView extends com.contrarywind.view.WheelView {
         final int value = a.getInt(R.styleable.DateWheelView_android_value, min);
         setCurrentItem(value - min);
 
-        if(isInEditMode()){
+        if (isInEditMode()) {
             setAdapter(new NumericWheelAdapter(min, max));// 设置"年"的显示数据
         }
 
-        boolean is_circle = a.getBoolean(R.styleable.DateWheelView_is_circle,false);
+        boolean is_circle = a.getBoolean(R.styleable.DateWheelView_is_circle, false);
         setCyclic(is_circle);
 
         a.recycle();//回收内存

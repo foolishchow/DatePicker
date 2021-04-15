@@ -6,6 +6,9 @@
         <attr name="android:value" />
         <attr name="android:textSize" />
         <attr name="android:textStyle" />
+        <attr name="android:textColor" />
+        <attr name="textColorCenter" format="color"/>
+        <attr name="textColorOut" format="color"/>
         <attr name="alpha_gradient" format="boolean"/>
         <attr name="item_visible_count" format="integer"/>
         <attr name="is_circle" format="boolean"/>
